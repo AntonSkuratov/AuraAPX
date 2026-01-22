@@ -9,7 +9,6 @@ namespace AuraAPX.Core.Entities
 		public Guid Id { get; set; }
 		public string? Login { get; set; }
 		public string? PasswordHash { get; set; }
-		public string? Salt { get; set; }
 		public int UserId { get; set; }
 		public User? User { get; set; }
 	}

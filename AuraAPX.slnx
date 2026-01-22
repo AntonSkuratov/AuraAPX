@@ -1,7 +1,8 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="AuraAPX.API/AuraAPX.API.csproj" Id="48536056-7d57-4db5-872b-8f11df190fdf" />
+    <Project Path="AuraAPX.Application/AuraAPX.Application.csproj" Id="904ecb8c-553f-46c6-a3cb-9d6ad65b6740" />
     <Project Path="AuraAPX.Core/AuraAPX.Core.csproj" />
-    <Project Path="AuraAPX.Infrastructure/AuraAPX.Infrastructure.csproj" Id="410286f5-08ac-44af-9079-1ad77afcc824" />
     <Project Path="AuraAPX.Storage/AuraAPX.Storage.csproj" Id="cebb88f7-4ed9-4667-8655-9ef4dae3e1d2" />
   </Folder>
 </Solution>

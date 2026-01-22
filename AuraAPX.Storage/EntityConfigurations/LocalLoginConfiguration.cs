@@ -20,9 +20,6 @@ namespace AuraAPX.Storage.EntityConfigurations
 
 			builder.Property(x => x.PasswordHash)
 				.IsRequired();
-
-			builder.Property(x => x.Salt)
-				.IsRequired();
 		}
 	}
 }

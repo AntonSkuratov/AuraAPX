@@ -1,0 +1,6 @@
+@AuraAPX.API_HostAddress = http://localhost:5019
+
+GET {{AuraAPX.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

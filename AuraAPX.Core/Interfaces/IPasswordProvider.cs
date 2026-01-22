@@ -6,7 +6,7 @@ namespace AuraAPX.Core.Interfaces
 {
 	public interface IPasswordProvider
 	{
-		string GenerateSalt();
-		string GenerateHash(string password, string salt);
+		string GenerateHash(string password);
+		bool VerifyPassword(string password, string hash);
 	}
 }

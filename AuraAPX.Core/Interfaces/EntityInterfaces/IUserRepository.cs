@@ -11,6 +11,6 @@ namespace AuraAPX.Core.Interfaces.EntityInterfaces
 		Task<Guid> DeleteAsync(Guid id);
 		Task<User> GetAsync(Guid id);
 		Task<List<User>> GetAllAsync();
-		Task<Guid> Update(Guid id, User user);
+		Task<Guid> UpdateAsync(Guid id, User user);
 	}
 }

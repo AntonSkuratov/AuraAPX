@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <ProjectReference Include="..\AuraAPX.Core\AuraAPX.Core.csproj" />
+    <ProjectReference Include="..\AuraAPX.Storage\AuraAPX.Storage.csproj" />
   </ItemGroup>
 
 </Project>
