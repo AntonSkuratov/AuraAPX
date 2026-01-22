@@ -13,5 +13,6 @@ namespace AuraAPX.Core.Entities
 		public DateTime DateBirth { get; set; }
 		public UserParameters? UserParameters { get; set; }
 		public LocalLogin? LocalLogin { get; set; }
+		public List<Workout> Workouts { get; set; } = new();
 	}
 }
