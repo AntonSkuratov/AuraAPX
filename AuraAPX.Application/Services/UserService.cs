@@ -40,5 +40,30 @@ namespace AuraAPX.Application.Services
 
 			return await _userRepository.CreateAsync(user);
 		}
+
+		//Удаление пользователся по id.
+		public async Task<Guid> DeleteAsync(Guid id)
+		{
+			return await _userRepository.DeleteAsync(id);
+		}
+
+		//Получение всех пользователей.
+		public async Task<List<User>> GetAllAsync(GetAllUsersDto dto)
+		{
+			var users = await _userRepository.GetAllAsync();
+
+			if (string.IsNullOrWhiteSpace(dto.SearchString))
+				return users;
+
+			return users.Where(x => x.Name!.Contains(dto.SearchString)
+				|| x.Surname!.Contains(dto.SearchString))
+				.ToList();
+		}
+
+		//Получение пользователся по id.
+		public async Task<User> GetAsync(Guid id)
+		{
+			return await _userRepository.GetAsync(id);
+		}
 	}
 }

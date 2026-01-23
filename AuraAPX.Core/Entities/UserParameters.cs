@@ -10,7 +10,7 @@ namespace AuraAPX.Core.Entities
 		public string? Gender { get; set; }
 		public int Height { get; set; }
 		public int Weight { get; set; }
-		public int UserId { get; set; }
+		public Guid UserId { get; set; }
 		public User? User { get; set; }
 	}
 }

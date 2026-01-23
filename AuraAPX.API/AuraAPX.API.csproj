@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\AuraAPX.Application\AuraAPX.Application.csproj" />
+    <ProjectReference Include="..\AuraAPX.Core\AuraAPX.Core.csproj" />
+    <ProjectReference Include="..\AuraAPX.Storage\AuraAPX.Storage.csproj" />
   </ItemGroup>
 
 </Project>
