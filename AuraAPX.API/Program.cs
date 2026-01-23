@@ -21,16 +21,18 @@ builder.Services.AddControllers()
 	});
 builder.Services.AddOpenApi();
 
+builder.Services.AddTransient<IWorkoutRepository, WorkoutRepository>();
+builder.Services.AddTransient<IWorkoutService, WorkoutService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPasswordProvider>(passwordProvider =>
 	{
 		return new PasswordProvider(Convert.ToInt32(builder.Configuration.GetSection("Security").GetSection("SecurityLevel").Value));
 	});
+
 builder.Services.AddSingleton<DatabaseContext>(options =>
 	{
 		return new DatabaseContext(builder.Configuration.GetSection("ConnectionString").Value!);
-		//options.UseNpgsql(builder.Configuration.GetSection("ConnectionString").Value!);
 	});
 
 var app = builder.Build();

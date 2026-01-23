@@ -11,7 +11,7 @@ namespace AuraAPX.Core.Entities
 		public int NumberRepetitions {  get; set; }
 		public double WorkingWeightOrResistance { get; set; }
 		public DateTime RestTime { get; set; }
-		public int ExerciseId { get; set; }
+		public Guid ExerciseId { get; set; }
 		public Exercise? Exercise { get; set; }
 	}
 }
