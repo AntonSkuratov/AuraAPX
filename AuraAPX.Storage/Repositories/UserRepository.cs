@@ -22,6 +22,10 @@ namespace AuraAPX.Storage.Repositories
 		public async Task<Guid> CreateAsync(User user)
 		{
 			await _databaseContext.Users.AddAsync(user);
+			user.UserParameters = new UserParameters
+			{
+				UserId = user.Id
+			};
 			await _databaseContext.SaveChangesAsync();
 			return user.Id;
 		}
@@ -51,19 +55,18 @@ namespace AuraAPX.Storage.Repositories
 		//Обновление пользователя по id.
 		public async Task<Guid> UpdateAsync(Guid id, User user)
 		{
-			var _user = await _databaseContext.Users.FirstAsync(x => x.Id == id);
-
-			Guid LocalLoginId=_user.Id;
-			Guid UserParametersId = _user.Id;
+			var _user = await _databaseContext.Users.Include(x => x.LocalLogin)
+				.Include(x => x.UserParameters)
+				.FirstAsync(x => x.Id == id);
 
 			_user.Name = user.Name;
 			_user.Surname = user.Surname;
-			_user.Email = user.Email;
 			_user.DateBirth = user.DateBirth;
-			_user.LocalLogin = user.LocalLogin;
-			_user.UserParameters = user.UserParameters;
-			_user.LocalLogin!.Id= LocalLoginId;
-			_user.UserParameters!.Id = UserParametersId;
+
+			_user.LocalLogin!.PasswordHash = user.LocalLogin!.PasswordHash;
+
+			_user.UserParameters!.Height = user.UserParameters!.Height;
+			_user.UserParameters!.Weight = user.UserParameters!.Weight;
 
 			await _databaseContext.SaveChangesAsync();
 			return _user.Id;

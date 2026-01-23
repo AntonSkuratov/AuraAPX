@@ -36,5 +36,11 @@ namespace AuraAPX.API.Controllers
 		{
 			return Ok(await _userService.DeleteAsync(id));
 		}
+
+		[HttpPut("")]
+		public async Task<IActionResult> Update([FromBody] UpdateUserDto dto)
+		{
+			return Ok(await _userService.UpdateAsync(dto));
+		}
 	}
 }

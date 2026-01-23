@@ -11,6 +11,7 @@ namespace AuraAPX.Application.Services.Interfaces
 		Task<Guid> CreateAsync(CreateUserDto dto);
 		Task<User> GetAsync(Guid id);
 		Task<List<User>> GetAllAsync(GetAllUsersDto dto);
-		Task<Guid> DeleteAsync(Guid id)	;
+		Task<Guid> DeleteAsync(Guid id);
+		Task<Guid> UpdateAsync(UpdateUserDto dto);
 	}
 }

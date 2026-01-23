@@ -37,6 +37,7 @@ namespace AuraAPX.Application.Services
 				Email = dto.Email,
 			};
 			user.LocalLogin = localLogin;
+			user.UserParameters = new UserParameters();
 
 			return await _userRepository.CreateAsync(user);
 		}
@@ -64,6 +65,32 @@ namespace AuraAPX.Application.Services
 		public async Task<User> GetAsync(Guid id)
 		{
 			return await _userRepository.GetAsync(id);
+		}
+
+		public async Task<Guid> UpdateAsync(UpdateUserDto dto)
+		{
+			var newUser = new User
+			{
+				Name = dto.Name,
+				Surname = dto.Surname,
+				DateBirth = dto.DateBirth
+			};
+
+			var newLocalLogin = new LocalLogin
+			{
+				PasswordHash = _passwordProvider.GenerateHash(dto.Password)
+			};
+
+			var newUserParameters = new UserParameters
+			{
+				Height = dto.Height,
+				Weight = dto.Weight,
+			};
+			
+			newUser.LocalLogin= newLocalLogin;
+			newUser.UserParameters= newUserParameters;
+
+			return await _userRepository.UpdateAsync(dto.Id, newUser);
 		}
 	}
 }

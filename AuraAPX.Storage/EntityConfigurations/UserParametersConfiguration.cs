@@ -15,7 +15,8 @@ namespace AuraAPX.Storage.EntityConfigurations
 
 			builder.Property(x => x.Gender)
 				.HasMaxLength(7)
-				.HasAnnotation("RegularExpression", "^(мужской|женский)$");
+				.HasDefaultValue("Не указан")
+				.HasAnnotation("RegularExpression", "^(мужской|женский|Не указан)$");
 
 			builder.Property(x => x.Height)
 				.HasMaxLength(250);
