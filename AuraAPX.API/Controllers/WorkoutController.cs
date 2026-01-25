@@ -19,5 +19,29 @@ namespace AuraAPX.API.Controllers
 		{
 			return Ok(await _workoutService.CreateAsync(dto));
 		}
+
+		[HttpGet("{id}")]
+		public async Task<IActionResult> Get(Guid id)
+		{
+			return Ok(await _workoutService.GetAsync(id));
+		}
+
+		[HttpGet("")]
+		public async Task<IActionResult> GetAll(GetAllWorkoutsDto dto)
+		{
+			return Ok(await _workoutService.GetAllAsync(dto));
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+			return Ok(await _workoutService.DeleteAsync(id));
+		}
+
+		[HttpPut("")]
+		public async Task<IActionResult> Update([FromBody] UpdateWorkoutDto dto)
+		{
+			return Ok(await _workoutService.UpdateAsync(dto));
+		}
 	}
 }

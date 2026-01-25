@@ -1,6 +1,7 @@
 ﻿using AuraAPX.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AuraAPX.Application.Dtos.ParameterDtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuraAPX.API.Controllers
 {
@@ -23,6 +24,24 @@ namespace AuraAPX.API.Controllers
 		public async Task<IActionResult> Get(Guid id)
 		{
 			return Ok(await _userService.GetAsync(id));
+		}
+
+		//Получение профиля текущего пользователя.
+		[Authorize]
+		[HttpGet("me")]
+		public async Task<IActionResult> GetCurrentUser()
+		{
+			return Ok(await _userService.GetCurrentUser(Guid.Parse(User.FindFirst("Guid-Id")!.Value)));
+
+		}
+
+		//Получение профиля текущего пользователя.
+		[Authorize]
+		[HttpGet("me/workouts")]
+		public async Task<IActionResult> GetWorkoutsCurrentUser()
+		{
+			return Ok(await _userService.GetWorkoutsCurrentUser(Guid.Parse(User.FindFirst("Guid-Id")!.Value)));
+
 		}
 
 		[HttpGet("")]

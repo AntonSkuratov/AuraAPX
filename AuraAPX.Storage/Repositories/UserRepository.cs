@@ -42,13 +42,19 @@ namespace AuraAPX.Storage.Repositories
 		//Получение всех пользователей.
 		public async Task<List<User>> GetAllAsync()
 		{
-			return await _databaseContext.Users.ToListAsync();
+			return await _databaseContext.Users.Include(x => x.LocalLogin).Include(x => x.Workouts).ToListAsync();
 		}
 
 		//Получение пользователя по id.
 		public async Task<User> GetAsync(Guid id)
 		{
-			var user = await _databaseContext.Users.FirstAsync(x => x.Id == id);
+			var user = await _databaseContext.Users
+				.Include(x => x.UserParameters)
+				.Include(x => x.LocalLogin)
+				.Include(x => x.Workouts)
+				.ThenInclude(x => x.Exercises)
+				.ThenInclude(x => x.Sets)
+				.FirstAsync(x => x.Id == id);
 			return user;
 		}
 

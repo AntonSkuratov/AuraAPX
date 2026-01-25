@@ -33,7 +33,7 @@ namespace AuraAPX.Storage.Repositories
 
 		public async Task<List<Workout>> GetAllAsync()
 		{
-			return await _databaseContext.Workouts.ToListAsync();
+			return await _databaseContext.Workouts.Include(x => x.Exercises).ToListAsync();
 		}
 
 		public async Task<Workout> GetAsync(Guid id)

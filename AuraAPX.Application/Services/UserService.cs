@@ -1,4 +1,5 @@
 ﻿using AuraAPX.Application.Dtos.ParameterDtos;
+using AuraAPX.Application.Dtos.ReturnedDtos;
 using AuraAPX.Application.Services.Interfaces;
 using AuraAPX.Core.Entities;
 using AuraAPX.Core.Interfaces;
@@ -67,6 +68,54 @@ namespace AuraAPX.Application.Services
 			return await _userRepository.GetAsync(id);
 		}
 
+		public async Task<GetCurrentUserDto> GetCurrentUser(Guid id)
+		{
+			var user = await _userRepository.GetAsync(id);
+
+			var userDto = new GetCurrentUserDto(
+				user.Id,
+				user.Name!,
+				user.Surname!,
+				user.Email!,
+				user.DateBirth,
+				user.UserParameters!.Gender!,
+				user.UserParameters.Height,
+				user.UserParameters.Weight,
+				user.LocalLogin!.Login!,
+				user.Workouts.Count()
+				);
+
+			return userDto;
+		}
+
+		public async Task<User> GetUserByCredentials(string login, string password)
+		{
+			var users = await _userRepository.GetAllAsync();
+
+			var hash = users.First(x => x.LocalLogin!.Login == login).LocalLogin!.PasswordHash;
+			var user = users.First(x => x.LocalLogin!.Login == login && _passwordProvider.VerifyPassword(password, hash!));
+
+			return user;
+		}
+
+		public async Task<List<GetWorkoutsCurrentUserDto>> GetWorkoutsCurrentUser(Guid id)
+		{
+			var user = await _userRepository.GetAsync(id);
+			var workouts = user.Workouts;
+
+			var workoutsDto = workouts.Select(x => new GetWorkoutsCurrentUserDto
+				(
+				x.Title!,
+				x.Description!,
+				x.StartTime,
+				x.EndTime,
+				x.Exercises.Count()
+				));
+
+			return workoutsDto.ToList();
+		}
+
+		//Обновление пользователся по id.
 		public async Task<Guid> UpdateAsync(UpdateUserDto dto)
 		{
 			var newUser = new User

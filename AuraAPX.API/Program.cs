@@ -1,3 +1,6 @@
+using AuraAPX.API.Authentication;
+using AuraAPX.API.Authentication.Services;
+using AuraAPX.API.Authentication.Services.Interfaces;
 using AuraAPX.Application.Services;
 using AuraAPX.Application.Services.Interfaces;
 using AuraAPX.Core.Features;
@@ -5,13 +8,39 @@ using AuraAPX.Core.Interfaces;
 using AuraAPX.Core.Interfaces.EntityInterfaces;
 using AuraAPX.Storage;
 using AuraAPX.Storage.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtSettings = builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings").Get<JwtAccessSettings>();
+
+
+
+builder.Services.Configure<JwtAccessSettings>(builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings"));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options =>
+	{
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = true,
+			ValidIssuer = jwtSettings!.Issuer,
+			ValidateAudience = true,
+			ValidAudience = jwtSettings.Audience,
+			ValidateLifetime = true,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key!)),
+			ValidateIssuerSigningKey = true,
+			ClockSkew = TimeSpan.Zero
+		};
+	});
 
 builder.Services.AddControllers()
 	.AddJsonOptions(options =>
@@ -19,12 +48,18 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 		options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 	});
+
+
 builder.Services.AddOpenApi();
 
+builder.Services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
+builder.Services.AddTransient<IExerciseRepository, ExerciseRepository>();
+builder.Services.AddTransient<IExerciseService, ExerciseService>();
 builder.Services.AddTransient<IWorkoutRepository, WorkoutRepository>();
 builder.Services.AddTransient<IWorkoutService, WorkoutService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+
 builder.Services.AddTransient<IPasswordProvider>(passwordProvider =>
 	{
 		return new PasswordProvider(Convert.ToInt32(builder.Configuration.GetSection("Security").GetSection("SecurityLevel").Value));
@@ -43,6 +78,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
