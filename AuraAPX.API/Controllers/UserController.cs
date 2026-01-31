@@ -9,22 +9,26 @@ namespace AuraAPX.API.Controllers
 	public class UserController : Controller
 	{
 		private readonly IUserService _userService;
-		public UserController(IUserService userService)
+		private readonly IWorkoutService _workoutService;
+		public UserController(IUserService userService, IWorkoutService workoutService)
 		{
 			_userService = userService;
+			_workoutService = workoutService;
 		}
 
+		//Регистрация нового пользователя.
+		[AllowAnonymous]
 		[HttpPost("")]
 		public async Task<IActionResult> Create([FromBody] CreateUserDto dto)
 		{
 			return Ok(await _userService.CreateAsync(dto));
 		}
 
-		[HttpGet("{id}")]
-		public async Task<IActionResult> Get(Guid id)
-		{
-			return Ok(await _userService.GetAsync(id));
-		}
+		//[HttpGet("{id}")]
+		//public async Task<IActionResult> Get(Guid id)
+		//{
+		//	return Ok(await _userService.GetAsync(id));
+		//}
 
 		//Получение профиля текущего пользователя.
 		[Authorize]
@@ -32,10 +36,9 @@ namespace AuraAPX.API.Controllers
 		public async Task<IActionResult> GetCurrentUser()
 		{
 			return Ok(await _userService.GetCurrentUser(Guid.Parse(User.FindFirst("Guid-Id")!.Value)));
-
 		}
 
-		//Получение профиля текущего пользователя.
+		//Получение списка тренировок текущего пользователя.
 		[Authorize]
 		[HttpGet("me/workouts")]
 		public async Task<IActionResult> GetWorkoutsCurrentUser()
@@ -44,22 +47,39 @@ namespace AuraAPX.API.Controllers
 
 		}
 
-		[HttpGet("")]
-		public async Task<IActionResult> GetAll(GetAllUsersDto dto)
+		//Создание тренировки текущего пользователя.
+		[Authorize]
+		[HttpPost("me/workouts")]
+		public async Task<IActionResult> CreateWorkoutCurrentUser([FromBody] CreateWorkoutDto dto)
 		{
-			return Ok(await _userService.GetAllAsync(dto));
+			return Ok(await _workoutService.CreateAsync(Guid.Parse(User.FindFirst("Guid-Id")!.Value), dto));
 		}
 
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> Delete(Guid id)
+		[Authorize]
+		[HttpDelete("me/workouts/{id}")]
+		public async Task<IActionResult> DeleteWorkoutCurrentUser(Guid id)
 		{
-			return Ok(await _userService.DeleteAsync(id));
+			return Ok(await _workoutService.DeleteAsync(id));
 		}
 
-		[HttpPut("")]
+		//[HttpGet("")]
+		//public async Task<IActionResult> GetAll(GetAllUsersDto dto)
+		//{
+		//	return Ok(await _userService.GetAllAsync(dto));
+		//}
+
+		[Authorize]
+		[HttpDelete("me")]
+		public async Task<IActionResult> Delete([FromBody] DeleteUserDto dto)
+		{
+			return Ok(await _userService.DeleteAsync((Guid.Parse(User.FindFirst("Guid-Id")!.Value)), dto));
+		}
+
+		[Authorize]
+		[HttpPut("me")]
 		public async Task<IActionResult> Update([FromBody] UpdateUserDto dto)
 		{
-			return Ok(await _userService.UpdateAsync(dto));
+			return Ok(await _userService.UpdateAsync((Guid.Parse(User.FindFirst("Guid-Id")!.Value)), dto));
 		}
 	}
 }

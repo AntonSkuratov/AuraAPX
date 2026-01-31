@@ -20,13 +20,13 @@ namespace AuraAPX.Application.Services
 		}
 
 
-		public async Task<Guid> CreateAsync(CreateWorkoutDto dto)
+		public async Task<Guid> CreateAsync(Guid id, CreateWorkoutDto dto)
 		{
 			var workout = new Workout
 			{
 				Title = dto.Title,
 				Description = dto.Description,
-				UserId = dto.UserId,
+				UserId = id
 			};
 
 			return await _workoutRepository.CreateAsync(workout);

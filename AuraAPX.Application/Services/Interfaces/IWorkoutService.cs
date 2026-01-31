@@ -8,7 +8,7 @@ namespace AuraAPX.Application.Services.Interfaces
 {
 	public interface IWorkoutService
 	{
-		Task<Guid> CreateAsync(CreateWorkoutDto dto);
+		Task<Guid> CreateAsync(Guid id, CreateWorkoutDto dto);
 		Task<Workout> GetAsync(Guid id);
 		Task<List<Workout>> GetAllAsync(GetAllWorkoutsDto dto);
 		Task<Guid> DeleteAsync(Guid id);

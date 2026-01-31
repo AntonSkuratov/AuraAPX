@@ -26,7 +26,7 @@ namespace AuraAPX.API.Authentication.Services
 		}
 
 
-		public async Task<string> GetJwtAccessToken(string login, string password)
+		public async Task<AccessTokenData> GetJwtAccessToken(string login, string password)
 		{
 			var user = await _userService.GetUserByCredentials(login, password);
 
@@ -46,7 +46,14 @@ namespace AuraAPX.API.Authentication.Services
 					new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!)), SecurityAlgorithms.HmacSha256));
 			var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-			return accessToken;
+			var accessTokenData = new AccessTokenData
+			{
+				UserId = user.Id,
+				Token = accessToken,
+				Expires = _jwtSettings.Expires,
+			};
+
+			return accessTokenData;
 		}
 	}
 }

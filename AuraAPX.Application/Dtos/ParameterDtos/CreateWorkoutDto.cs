@@ -7,7 +7,6 @@ namespace AuraAPX.Application.Dtos.ParameterDtos
 	public record CreateWorkoutDto
 		(
 		string Title,
-		string Description,
-		Guid UserId
+		string Description
 		);
 }

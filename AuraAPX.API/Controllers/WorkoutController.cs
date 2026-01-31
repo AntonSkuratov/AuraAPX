@@ -17,7 +17,8 @@ namespace AuraAPX.API.Controllers
 		[HttpPost("")]
 		public async Task<IActionResult> Create([FromBody] CreateWorkoutDto dto)
 		{
-			return Ok(await _workoutService.CreateAsync(dto));
+			//todo
+			return Ok();
 		}
 
 		[HttpGet("{id}")]

@@ -1,6 +1,8 @@
 using AuraAPX.API.Authentication;
 using AuraAPX.API.Authentication.Services;
 using AuraAPX.API.Authentication.Services.Interfaces;
+using AuraAPX.API.Infrastructure;
+using AuraAPX.API.Infrastructure.Services;
 using AuraAPX.Application.Services;
 using AuraAPX.Application.Services.Interfaces;
 using AuraAPX.Core.Features;
@@ -24,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings").Get<JwtAccessSettings>();
 
 
-
+builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("Redis"));
 builder.Services.Configure<JwtAccessSettings>(builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
@@ -52,6 +54,14 @@ builder.Services.AddControllers()
 
 builder.Services.AddOpenApi();
 
+//builder.Services.AddSingleton(sp =>
+//{
+//	var config = new RedisConfiguration();
+//	builder.Configuration.GetSection("Redis").Bind(config);
+//	return config;
+//});
+
+builder.Services.AddTransient<IRefreshTokenService, RedisRefreshTokenService>();
 builder.Services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();
 builder.Services.AddTransient<IExerciseRepository, ExerciseRepository>();
 builder.Services.AddTransient<IExerciseService, ExerciseService>();

@@ -7,6 +7,7 @@ using AuraAPX.Core.Interfaces.EntityInterfaces;
 using AuraAPX.Storage;
 using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Text;
 
 namespace AuraAPX.Application.Services
@@ -44,23 +45,27 @@ namespace AuraAPX.Application.Services
 		}
 
 		//Удаление пользователся по id.
-		public async Task<Guid> DeleteAsync(Guid id)
+		public async Task<Guid> DeleteAsync(Guid id, DeleteUserDto dto)
 		{
-			return await _userRepository.DeleteAsync(id);
+			var user = await GetUserByCredentials(dto.Login, dto.Password);
+			if (user.Id == id)
+				return await _userRepository.DeleteAsync(id);
+			else
+				throw new AuthenticationException("Неверный логин или пароль");
 		}
 
-		//Получение всех пользователей.
-		public async Task<List<User>> GetAllAsync(GetAllUsersDto dto)
-		{
-			var users = await _userRepository.GetAllAsync();
+		////Получение всех пользователей.
+		//public async Task<List<User>> GetAllAsync(GetAllUsersDto dto)
+		//{
+		//	var users = await _userRepository.GetAllAsync();
 
-			if (string.IsNullOrWhiteSpace(dto.SearchString))
-				return users;
+		//	if (string.IsNullOrWhiteSpace(dto.SearchString))
+		//		return users;
 
-			return users.Where(x => x.Name!.Contains(dto.SearchString)
-				|| x.Surname!.Contains(dto.SearchString))
-				.ToList();
-		}
+		//	return users.Where(x => x.Name!.Contains(dto.SearchString)
+		//		|| x.Surname!.Contains(dto.SearchString))
+		//		.ToList();
+		//}
 
 		//Получение пользователся по id.
 		public async Task<User> GetAsync(Guid id)
@@ -74,13 +79,9 @@ namespace AuraAPX.Application.Services
 
 			var userDto = new GetCurrentUserDto(
 				user.Id,
-				user.Name!,
-				user.Surname!,
-				user.Email!,
-				user.DateBirth,
-				user.UserParameters!.Gender!,
-				user.UserParameters.Height,
-				user.UserParameters.Weight,
+				user.Name!, user.Surname!,
+				user.Email!, user.DateBirth,
+				user.UserParameters!.Gender!, user.UserParameters.Height, user.UserParameters.Weight,
 				user.LocalLogin!.Login!,
 				user.Workouts.Count()
 				);
@@ -116,7 +117,7 @@ namespace AuraAPX.Application.Services
 		}
 
 		//Обновление пользователся по id.
-		public async Task<Guid> UpdateAsync(UpdateUserDto dto)
+		public async Task<Guid> UpdateAsync(Guid id, UpdateUserDto dto)
 		{
 			var newUser = new User
 			{
@@ -125,21 +126,15 @@ namespace AuraAPX.Application.Services
 				DateBirth = dto.DateBirth
 			};
 
-			var newLocalLogin = new LocalLogin
-			{
-				PasswordHash = _passwordProvider.GenerateHash(dto.Password)
-			};
-
 			var newUserParameters = new UserParameters
 			{
 				Height = dto.Height,
 				Weight = dto.Weight,
 			};
-			
-			newUser.LocalLogin= newLocalLogin;
-			newUser.UserParameters= newUserParameters;
 
-			return await _userRepository.UpdateAsync(dto.Id, newUser);
+			newUser.UserParameters = newUserParameters;
+
+			return await _userRepository.UpdateAsync(id, newUser);
 		}
 	}
 }

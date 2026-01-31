@@ -4,12 +4,9 @@ using System.Text;
 
 namespace AuraAPX.Application.Dtos.ParameterDtos
 {
-	public record UpdateUserDto
+	public record DeleteUserDto
 		(
-		string Name,
-		string Surname,
-		DateTime DateBirth,
-		int Height,
-		int Weight
+		string Login,
+		string Password
 		);
 }
