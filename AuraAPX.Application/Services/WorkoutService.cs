@@ -37,16 +37,17 @@ namespace AuraAPX.Application.Services
 			return _workoutRepository.DeleteAsync(id);
 		}
 
-		public async Task<List<Workout>> GetAllAsync(GetAllWorkoutsDto dto)
+		public async Task<List<Workout>> GetAllWorkoutsUserAsync(Guid userId)
 		{
 			var workouts = await _workoutRepository.GetAllAsync();
 
-			if (string.IsNullOrWhiteSpace(dto.SearchString))
-				return workouts;
+			//if (string.IsNullOrWhiteSpace(dto.SearchString))
+			//	return workouts;
 
-			return workouts.Where(x => x.Title!.Contains(dto.SearchString)
-				|| x.Description!.Contains(dto.SearchString))
-				.ToList();
+			//return workouts.Where(x => x.Title!.Contains(dto.SearchString)
+			//	|| x.Description!.Contains(dto.SearchString))
+			//	.ToList();
+			return workouts.Where(x => x.UserId == userId).ToList();
 		}
 
 		public async Task<Workout> GetAsync(Guid id)

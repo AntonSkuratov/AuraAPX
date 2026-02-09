@@ -3,6 +3,7 @@ using AuraAPX.API.Authentication.Services;
 using AuraAPX.API.Authentication.Services.Interfaces;
 using AuraAPX.API.Infrastructure;
 using AuraAPX.API.Infrastructure.Services;
+using AuraAPX.API.Infrastructure.Validation;
 using AuraAPX.Application.Services;
 using AuraAPX.Application.Services.Interfaces;
 using AuraAPX.Core.Features;
@@ -10,6 +11,7 @@ using AuraAPX.Core.Interfaces;
 using AuraAPX.Core.Interfaces.EntityInterfaces;
 using AuraAPX.Storage;
 using AuraAPX.Storage.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -23,11 +25,11 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var jwtSettings = builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings").Get<JwtAccessSettings>();
+var jwtSettings = builder.Configuration.GetSection("Auth").GetSection("JwtAccessTokenSettings").Get<JwtAccessTokenSettings>();
 
 
 builder.Services.Configure<RedisConfiguration>(builder.Configuration.GetSection("Redis"));
-builder.Services.Configure<JwtAccessSettings>(builder.Configuration.GetSection("Auth").GetSection("JwtAccessSettings"));
+builder.Services.Configure<JwtAccessTokenSettings>(builder.Configuration.GetSection("Auth").GetSection("JwtAccessTokenSettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
 	{
@@ -54,12 +56,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddOpenApi();
 
-//builder.Services.AddSingleton(sp =>
-//{
-//	var config = new RedisConfiguration();
-//	builder.Configuration.GetSection("Redis").Bind(config);
-//	return config;
-//});
+builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 
 builder.Services.AddTransient<IRefreshTokenService, RedisRefreshTokenService>();
 builder.Services.AddTransient<IJwtAuthenticationService, JwtAuthenticationService>();

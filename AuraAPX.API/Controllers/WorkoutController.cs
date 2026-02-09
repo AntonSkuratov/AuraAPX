@@ -5,13 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuraAPX.API.Controllers
 {
-	[Route("workouts")]
+	[Route("users/me/workouts")]
 	public class WorkoutController : Controller
 	{
 		private readonly IWorkoutService _workoutService;
-		public WorkoutController(IWorkoutService workoutService)
+		private readonly IUserService _userService;
+
+		public WorkoutController(IWorkoutService workoutService,
+			IUserService userService)
 		{
 			_workoutService = workoutService;
+			_userService = userService;
 		}
 
 		[HttpPost("")]
@@ -24,13 +28,20 @@ namespace AuraAPX.API.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(Guid id)
 		{
-			return Ok(await _workoutService.GetAsync(id));
+			var userId = Guid.Parse(User.FindFirst("Guid-Id")!.Value);
+			var user= await _userService.GetCurrentUser(userId);
+			var workout=await _workoutService.GetAsync(id);
+			if (user.Workouts.Contains(workout))
+				return Ok(await _workoutService.GetAsync(id));
+			else
+				return Forbid("Нема тебе");
 		}
 
-		[HttpGet("")]
-		public async Task<IActionResult> GetAll(GetAllWorkoutsDto dto)
+		[HttpGet]
+		public async Task<IActionResult> GetAllWorkoutsCurrentUser()
 		{
-			return Ok(await _workoutService.GetAllAsync(dto));
+			var userId = Guid.Parse(User.FindFirst("Guid-Id")!.Value);
+			return Ok(await _workoutService.GetAllWorkoutsUserAsync(userId));
 		}
 
 		[HttpDelete("{id}")]
@@ -39,9 +50,9 @@ namespace AuraAPX.API.Controllers
 			return Ok(await _workoutService.DeleteAsync(id));
 		}
 
-		[HttpPut("")]
+		[HttpPut("{id}")]
 		public async Task<IActionResult> Update([FromBody] UpdateWorkoutDto dto)
-		{
+		{			
 			return Ok(await _workoutService.UpdateAsync(dto));
 		}
 	}

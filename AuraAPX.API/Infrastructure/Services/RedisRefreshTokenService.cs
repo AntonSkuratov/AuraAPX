@@ -21,7 +21,9 @@ namespace AuraAPX.API.Infrastructure.Services
 			var refreshToken = GenerateRefreshToken();
 			var refreshTokenTtlDays = TimeSpan.FromDays(_redis.RefreshTokenTtlDays);
 
-			db.StringSet(userId.ToString(), refreshToken, refreshTokenTtlDays);
+			var key = $"user_id:{userId.ToString()}";
+
+			db.StringSet(key, refreshToken, refreshTokenTtlDays);
 
 			return new RefreshTokenData
 			{

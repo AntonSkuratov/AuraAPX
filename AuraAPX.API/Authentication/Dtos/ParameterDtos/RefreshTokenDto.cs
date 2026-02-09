@@ -2,7 +2,6 @@
 {
 	public record RefreshTokenDto
 		(
-		Guid UserId,
 		string RefreshToken
 		);
 }

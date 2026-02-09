@@ -11,11 +11,10 @@ namespace AuraAPX.Application.Services.Interfaces
 	{
 		Task<Guid> CreateAsync(CreateUserDto dto);
 		Task<User> GetAsync(Guid id);
-		//Task<List<User>> GetAllAsync(GetAllUsersDto dto);
 		Task<Guid> DeleteAsync(Guid id, DeleteUserDto dto);
 		Task<Guid> UpdateAsync(Guid id, UpdateUserDto dto);
-		Task<GetCurrentUserDto> GetCurrentUser(Guid id);
-		Task<List<GetWorkoutsCurrentUserDto>> GetWorkoutsCurrentUser(Guid id);
+		Task<User> GetCurrentUser(Guid id);
+		//Task<List<GetWorkoutsCurrentUserDto>> GetWorkoutsCurrentUser(Guid id);
 		Task<User> GetUserByCredentials(string login, string password);
 	}
 }

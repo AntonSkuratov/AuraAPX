@@ -2,6 +2,7 @@
 {
 	public record GetTokensDto
 		(
+		Guid UserId,
 		AccessTokenData AccessToken,
 		RefreshTokenData RefreshToken
 		);

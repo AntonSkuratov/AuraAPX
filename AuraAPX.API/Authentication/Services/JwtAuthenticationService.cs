@@ -16,9 +16,9 @@ namespace AuraAPX.API.Authentication.Services
 	{
 		private readonly IUserService _userService;
 		private readonly IPasswordProvider _passwordProvider;
-		private readonly JwtAccessSettings _jwtSettings;
+		private readonly JwtAccessTokenSettings _jwtSettings;
 
-		public JwtAuthenticationService(IUserService userService, IPasswordProvider passwordProvider, IOptions<JwtAccessSettings> jwtSettings)
+		public JwtAuthenticationService(IUserService userService, IPasswordProvider passwordProvider, IOptions<JwtAccessTokenSettings> jwtSettings)
 		{
 			_userService = userService;
 			_passwordProvider = passwordProvider;
@@ -48,7 +48,6 @@ namespace AuraAPX.API.Authentication.Services
 
 			var accessTokenData = new AccessTokenData
 			{
-				UserId = user.Id,
 				Token = accessToken,
 				Expires = _jwtSettings.Expires,
 			};

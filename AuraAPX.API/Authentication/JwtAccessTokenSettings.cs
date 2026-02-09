@@ -1,6 +1,6 @@
 ﻿namespace AuraAPX.API.Authentication
 {
-	public class JwtAccessSettings
+	public class JwtAccessTokenSettings
 	{
 		public string? Issuer { get; set; } 
 		public string? Audience { get; set; }

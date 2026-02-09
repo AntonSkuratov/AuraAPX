@@ -73,20 +73,20 @@ namespace AuraAPX.Application.Services
 			return await _userRepository.GetAsync(id);
 		}
 
-		public async Task<GetCurrentUserDto> GetCurrentUser(Guid id)
+		public async Task<User> GetCurrentUser(Guid id)
 		{
 			var user = await _userRepository.GetAsync(id);
 
-			var userDto = new GetCurrentUserDto(
-				user.Id,
-				user.Name!, user.Surname!,
-				user.Email!, user.DateBirth,
-				user.UserParameters!.Gender!, user.UserParameters.Height, user.UserParameters.Weight,
-				user.LocalLogin!.Login!,
-				user.Workouts.Count()
-				);
+			//var userDto = new GetCurrentUserDto(
+			//	user.Id,
+			//	user.Name!, user.Surname!,
+			//	user.Email!, user.DateBirth,
+			//	user.UserParameters!.Gender!, user.UserParameters.Height, user.UserParameters.Weight,
+			//	user.LocalLogin!.Login!,
+			//	user.Workouts.Count()
+			//	);
 
-			return userDto;
+			return user;
 		}
 
 		public async Task<User> GetUserByCredentials(string login, string password)
